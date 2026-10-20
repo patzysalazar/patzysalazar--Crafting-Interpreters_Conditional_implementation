@@ -747,7 +747,10 @@ static InterpretResult run() {
           runtimeError("Operand must be a number.");
           return INTERPRET_RUNTIME_ERROR;
         }
-        push(NUMBER_VAL(-AS_NUMBER(pop())));
+        //push(NUMBER_VAL(-AS_NUMBER(pop())));
+        int stackTopIndex = vm.stackTop -1;//accesses value from top of stack
+        vm.stack[stackTopIndex] = NUMBER_VAL(-AS_NUMBER(vm.stack[stackTopIndex]));//negates number
+
         break;
 //< Types of Values op-negate
 //> Global Variables interpret-print
