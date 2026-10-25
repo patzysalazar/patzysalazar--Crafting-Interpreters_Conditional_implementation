@@ -36,6 +36,7 @@ typedef struct {
 typedef enum {
   PREC_NONE,
   PREC_ASSIGNMENT,  // =
+  PREC_CONDITIONAL,  // ?: - has higher precedence level
   PREC_OR,          // or
   PREC_AND,         // and
   PREC_EQUALITY,    // == !=
@@ -858,6 +859,17 @@ static void unary(bool canAssign) {
     default: return; // Unreachable.
   }
 }
+static void conditional(bool assign){
+    //parse the then branch
+  parsePrecedence(PREC_CONDITIONAL);
+  if(!match(TOKEN_COLON)){// check if : is present, error if not
+    error("Expect':' after the then branch of conditional operator");//did not find : after the value that comes after ?
+  }
+  else{//parse the else branch
+    parsePrecedence(PREC_ASSIGNMENT);
+  }
+
+}
 //< Compiling Expressions unary
 //> Compiling Expressions rules
 ParseRule rules[] = {
@@ -975,6 +987,11 @@ ParseRule rules[] = {
   [TOKEN_WHILE]         = {NULL,     NULL,   PREC_NONE},
   [TOKEN_ERROR]         = {NULL,     NULL,   PREC_NONE},
   [TOKEN_EOF]           = {NULL,     NULL,   PREC_NONE},
+
+//parser will find rules for ?:
+  [TOKEN_QUESTION]      = {NULL,     conditional,     PREC_CONDITIONAL},// connection for ? to conditional function, has no prefix
+  [TOKEN_COLON]         = {NULL,     NULL,   PREC_NONE},
+  //
 };
 //< Compiling Expressions rules
 //> Compiling Expressions parse-precedence
@@ -1444,6 +1461,7 @@ static void statement() {
 //< parse-expressions-statement
   }
 }
+
 //< Global Variables statement
 
 /* Scanning on Demand compiler-c < Compiling Expressions compile-signature

@@ -231,6 +231,9 @@ Token scanToken() {
     case '+': return makeToken(TOKEN_PLUS);
     case '/': return makeToken(TOKEN_SLASH);
     case '*': return makeToken(TOKEN_STAR);
+    case '?': return makeToken(TOKEN_QUESTION);//for conditional, token ?
+    case ':': return makeToken(TOKEN_COLON);//for conditional, token :
+
 //> two-char
     case '!':
       return makeToken(
